@@ -1,177 +1,177 @@
- # 🌐 NavIT - Projet C
+# Réseau Social en C
 
+## Description
 
-Une application console de *Réseau Social* développée en C, similaire à Facebook. Cette application gère les utilisateurs, les amitiés, les abonnements et les publications. Conçue comme projet universitaire pour démontrer les structures de données avancées et la gestion de fichiers.
+Application console de réseau social développée en C, permettant de gérer des utilisateurs, leurs relations (amis et abonnements) et leurs publications. Le système utilise une structure d'arbre binaire de recherche (BST) pour organiser les utilisateurs et offre des fonctionnalités complètes de gestion de réseau social.
 
----
+## Auteurs
 
-## 📋 Table des Matières
+- **Ritej Louati**
+- **Emna Khmiri**
 
-- [Fonctionnalités](#-fonctionnalités)
-- [Structures de Données](#-structures-de-données)
-- [Structure du Projet](#-structure-du-projet)
-- [Installation](#-installation)
-- [Utilisation](#-utilisation)
-- [Options du Menu](#-options-du-menu)
-- [Auteurs](#-auteurs)
-- [Licence](#-licence)
+## Fonctionnalités
 
----
+### Gestion des Utilisateurs
+- ✅ Création d'utilisateurs avec ID unique et nom
+- ✅ Suppression d'utilisateurs
+- ✅ Recherche d'utilisateurs par ID
+- ✅ Affichage de tous les utilisateurs (ordre croissant par ID)
 
-## ✨ Fonctionnalités
+### Gestion des Relations
+- 👥 **Amis** : Relations bidirectionnelles (si A est ami avec B, alors B est ami avec A)
+  - Ajouter un ami
+  - Supprimer un ami
+- 📢 **Abonnements** : Relations unidirectionnelles (suivre un utilisateur)
+  - Suivre un utilisateur
+  - Arrêter de suivre un utilisateur
 
-| Fonctionnalité | Description |
-|----------------|-------------|
-| 👤 *Gestion des Utilisateurs* | Ajouter, rechercher et supprimer des profils avec des IDs uniques |
-| 🤝 *Amitiés* | Créer des amitiés bidirectionnelles entre utilisateurs |
-| 📢 *Système d'Abonnement* | S'abonner à d'autres utilisateurs (unidirectionnel) |
-| 📝 *Publications* | Publier des messages avec horodatage automatique |
-| 📰 *Fil d'Actualité* | Voir les publications des amis par ordre chronologique |
-| 💾 *Persistance des Données* | Toutes les données sont sauvegardées et chargées au démarrage |
-| 📊 *Liste des Utilisateurs* | Afficher tous les utilisateurs enregistrés |
+### Publications
+- 📝 Publier des messages avec horodatage automatique
+- 📰 Afficher la timeline d'un utilisateur (publications des amis, triées par date)
 
----
+### Statistiques
+- 📊 Nombre total d'utilisateurs
+- 🏆 Utilisateur le plus actif (nombre de publications)
+- ⭐ Utilisateur le plus suivi (nombre d'abonnés)
+- 🤝 Utilisateur le plus sociable (nombre d'amis)
 
-## 🏗️ Structures de Données
+### Persistance des Données
+- 💾 Sauvegarde automatique des utilisateurs, relations et publications
+- 📂 Chargement automatique au démarrage
+- **Fichiers générés** :
+  - `utilisateurs.bin` : Données des utilisateurs (format binaire)
+  - `relations.txt` : Relations amis et abonnements (format texte)
+  - `publications.txt` : Messages publiés (format texte)
 
-L'application utilise plusieurs structures de données optimisées pour différentes opérations :
+## Structure de Données
 
-### Arbre Binaire de Recherche (ABR) - Utilisateurs
+### Types Principaux
 
-        [User 50]
-        /       \
-   [User 25]  [User 75]
-    /    \      /    \
- [10]   [30]  [60]  [90]
-
-Les utilisateurs sont stockés dans un *Arbre Binaire de Recherche* pour des opérations efficaces O(log n) de recherche, insertion et suppression.
-
-### Listes Chaînées - Relations & Publications
-
-User -> Amis: [ID:5] -> [ID:12] -> [ID:88] -> NULL
-     -> Abonnements: [ID:69] -> [ID:123] -> NULL
-     -> Publications: [Post1] -> [Post2] -> [Post3] -> NULL
-
-Chaque utilisateur maintient trois listes chaînées :
-- *Amis* (amis) : Amitiés bidirectionnelles
-- *Abonnements* (abonnements) : Utilisateurs suivis
-- *Publications* : Messages publiés
-
-### Définitions des Structures
-
+```c
 typedef struct User {
-    int id;                    // Identifiant unique
-    char name[30];             // Nom d'utilisateur
-    Relation *amis;            // Liste chaînée des amis
-    Relation *abonnements;     // Liste chaînée des abonnements
-    Publication *publications; // Liste chaînée des publications
-    struct User *left, *right; // Pointeurs ABR
+    int id;
+    char name[30];
+    Relation *amis;              // Liste d'amis
+    Relation *abonnements;       // Liste d'abonnements
+    Publication *publications;   // Liste de publications
+    struct User *left;           // Sous-arbre gauche (BST)
+    struct User *right;          // Sous-arbre droit (BST)
 } User;
+```
 
-typedef struct Relation {
-    int id;                    // ID de l'utilisateur lié
-    struct Relation *next;     // Relation suivante
-} Relation;
+### Organisation
+- **Arbre Binaire de Recherche (BST)** : Les utilisateurs sont organisés par ID pour une recherche efficace en O(log n) dans le cas moyen
+- **Listes chaînées** : Relations et publications stockées en listes dynamiques
 
-typedef struct Publication {
-    char message[200];         // Contenu du message
-    char date[20];             // Horodatage
-    struct Publication *next;  // Publication suivante
-} Publication;
-
----
-
-## 📁 Structure du Projet
-
-
-├── interface.c          # Code source principal
-└── README.md            # Ce fichier
-
-# Fichiers générés à l'exécution :
- ├── utilisateurs.bin   # Fichier binaire des utilisateurs
- ├── relations.txt      # Fichier texte des amitiés et abonnements
- └── publications.txt   # Stockage des publications
-
----
-
-## 🚀 Installation
+## Compilation et Exécution
 
 ### Prérequis
+- Compilateur C (GCC recommandé)
+- Système d'exploitation Windows (utilise `windows.h`)
 
-- *Compilateur GCC* (GNU Compiler Collection) ou tout compilateur C
-- Terminal / Invite de commandes
+### Compilation
+```bash
+gcc interface.c -o reseau_social.exe
+```
 
-### Compilation sur Windows
+### Exécution
+```bash
+./reseau_social.exe
+```
 
-cmd
-# Avec GCC (MinGW)
-gcc -o NavIT.exe interface.c
+## Menu Principal
 
-# Exécuter
-NavIT.exe
-
-### Utilisation d'un IDE
-
-1. Ouvrir votre IDE préféré (Code::Blocks, Visual Studio)
-2. Créer un nouveau projet C
-3. Ajouter interface.c au projet
-4. Compiler et exécuter
-
----
-
-## 💻 Utilisation
-
-### Lancement de l'Application
-
-Au démarrage, vous verrez :
-
+```
 =====================================
    Bienvenue dans le reseau social   
 =====================================
-Réalise par Ritej Louati & Emna Khmiri
 
----
+1. Créer utilisateur
+2. Supprimer utilisateur
+3. Rechercher utilisateur
+4. Gérer les relations
+5. Publier un message
+6. Afficher les utilisateurs
+7. Afficher les statistiques
+8. Afficher la timeline
+9. Enregistrer & Quitter
+```
 
-## 📖 Options du Menu
+## Utilisation
 
-| Option | Action | Description |
-|--------|--------|-------------|
-| *1* | Ajouter utilisateur | Créer un nouvel utilisateur avec ID et nom |
-| *2* | Supprimer utilisateur | Supprimer un utilisateur et ses données |
-| *3* | Rechercher utilisateur | Trouver un utilisateur par son ID |
-| *4* | Gérer les relations | Ajouter/supprimer amis, suivre/ne plus suivre |
-| *5* | Publier un message | Poster un nouveau message (horodatage auto) |
-| *6* | Afficher utilisateurs | Afficher tous les utilisateurs enregistrés |
-| *7* | Afficher statistiques | Bientôt disponible |
-| *8* | Afficher fil d'actualité | Voir les publications des amis |
-| *9* | Sauvegarder & Quitter | Sauvegarder et quitter l'application |
+### Créer un Utilisateur
+1. Choisir l'option 1
+2. Entrer un ID unique (nombre entier)
+3. Entrer le nom de l'utilisateur
 
-### Gestion des Relations (Option 4)
+### Ajouter un Ami
+1. Choisir l'option 4
+2. Sélectionner l'option 1 (Ajouter ami)
+3. Entrer votre ID
+4. Entrer l'ID de l'ami à ajouter
 
-1. Ajouter ami
-2. Suivre utilisateur
-3. Supprimer ami
-4. Arrêter de suivre
+### Publier un Message
+1. Choisir l'option 5
+2. Entrer votre ID
+3. Entrer le message
+4. La date et l'heure sont automatiquement enregistrées
 
----
+### Afficher la Timeline
+1. Choisir l'option 8
+2. Entrer votre ID
+3. Voir les publications de vos amis triées par date (plus récentes en premier)
 
-## 👥 Auteurs
+## Format des Fichiers
 
-<table>
-  <tr>
-    <td align="center">
-      <b>Ritej Louati</b><br>
-      <sub>ENSI II1A</sub>
-    </td>
-    <td align="center">
-      <b>Emna Khmiri</b><br>
-      <sub>ENSI II1A</sub>
-    </td>
-  </tr>
-</table>
+### relations.txt
+```
+ID: 1
+Amis: 2 3
+Abonnements: 4 5
 
-## 📜 Licence
+ID: 2
+Amis: 1
+Abonnements:
+```
 
-Ce projet est développé à des fins éducatives dans le cadre du projet du cours de Programmation C à l'ENSI.
+### publications.txt
+```
+1;2024-12-09 14:30:00;Bonjour tout le monde!
+2;2024-12-09 15:45:00;Ma première publication
+```
 
----
+## Fonctionnalités Techniques
+
+- **Encodage UTF-8** : Support des caractères français
+- **Gestion mémoire** : Allocation dynamique avec libération appropriée
+- **Validation des entrées** : Vérification des données utilisateur
+- **Interface console** : Écran clair entre chaque action
+- **Tri des publications** : Algorithme de tri à bulles pour la timeline
+
+## Limites
+
+- Taille maximale du nom : 30 caractères
+- Taille maximale d'un message : 200 caractères
+- Taille maximale de la date : 20 caractères
+- Plateforme : Windows uniquement (utilise `windows.h` et `cls`)
+
+## Améliorations Possibles
+
+- 🔧 Support multiplateforme (Linux, macOS)
+- 🔍 Recherche par nom d'utilisateur
+- 🔐 Système d'authentification
+- 💬 Commentaires sur les publications
+- ❤️ Système de "J'aime"
+- 🔔 Notifications
+- 🎨 Interface graphique
+
+## Notes Techniques
+
+- L'arbre BST peut devenir déséquilibré selon l'ordre d'insertion des utilisateurs
+- Les relations sont vérifiées pour éviter les doublons
+- Un utilisateur ne peut pas être ami avec lui-même
+- La suppression d'un utilisateur supprime également toutes ses relations et publications
+
+## License
+
+Projet académique - Libre d'utilisation à des fins éducatives.
