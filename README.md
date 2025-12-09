@@ -83,13 +83,14 @@ typedef struct Publication {
 
 ## 📁 Structure du Projet
 
+
 ├── interface.c          # Code source principal
 └── README.md            # Ce fichier
 
 # Fichiers générés à l'exécution :
-# ├── utilisateurs.bin   # Fichier binaire des utilisateurs
-# ├── relations.txt      # Fichier texte des amitiés et abonnements
-# └── publications.txt   # Stockage des publications
+ ├── utilisateurs.bin   # Fichier binaire des utilisateurs
+ ├── relations.txt      # Fichier texte des amitiés et abonnements
+ └── publications.txt   # Stockage des publications
 
 ---
 
